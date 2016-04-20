@@ -11,48 +11,37 @@ example.run(function($ionicPlatform, $timeout) {
 });
 example.controller("ExampleController", ['$scope',  function($scope) {
     $scope.testmethod = function() {
-        onDeviceReadyEWEWE();
+        onDeviceReadyTest();
     }
 }]);
 // Global InAppBrowser reference
 var iabRef = null;
 
+//load start event
 function iabLoadStart(event) {
    /*  if (event.url.match("https://payu.herokuapp.com/success")) {
-        alert("success");
-	httpGet("https://payu.herokuapp.com/success");
        // iabRef.close();
     } */
 }
 
 
-
-
-
-
 function iabLoadStop(event) {
-	
-	console.log(event);
-	console.log(event.type + ' - ' + event.url);
+//checking condition for success URL match with following URL 
+//after inappbrowser window load stop
 	 if (event.url.match("https://payu.herokuapp.com/success")) {
-		 console.log(iabRef);
-        alert("success");
-		
-		
-		
-		
-     // iabRef.close(); 
+	//closing inappbrowser window 
+	//we can call Rest ApI to checking Transaction details 
+      iabRef.close(); 
 	   
     }
 	
 	}
-
+//load error event
 function iabLoadError(event) {
     alert(event.type + ' - ' + event.message);
 }
-
+//close event
 function iabClose(event) {
-    alert(event.type);
     iabRef.removeEventListener('loadstart', iabLoadStart);
     iabRef.removeEventListener('loadstop', iabLoadStop);
     iabRef.removeEventListener('loaderror', iabLoadError);
@@ -60,9 +49,9 @@ function iabClose(event) {
 }
 // device APIs are available
 //
-function onDeviceReadyEWEWE() {
+function onDeviceReadyTest() {
     iabRef = window.open('payuBiz.html', '_blank', 'location=no');
-	iabRef.addEventListener('loadstart', iabLoadStart);
+	  iabRef.addEventListener('loadstart', iabLoadStart);
     iabRef.addEventListener('loadstop', iabLoadStop);
     iabRef.addEventListener('loaderror', iabLoadError);
     iabRef.addEventListener('exit', iabClose);
