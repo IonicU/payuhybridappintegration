@@ -26,16 +26,34 @@ function iabLoadStart(event) {
 
 
 function iabLoadStop(event) {
-//checking condition for success URL match with following URL 
-//after inappbrowser window load stop
-	 if (event.url.match("https://payu.herokuapp.com/success")) {
-	//closing inappbrowser window 
-	//we can call Rest ApI to checking Transaction details 
-      iabRef.close(); 
-	   
-    }
-	
-	}
+    if (event.url.match("https://payu.herokuapp.com/success")) {
+        console.log(iabRef);
+        iabRef.executeScript({
+            code: "document.body.innerHTML"
+        }, function(values) {
+            //incase values[0] contains result string
+            var a = getValue(values[0], 'mihpayid');
+            var b = getValue(values[0], 'status');
+            var c = getValue(values[0], 'unmappedstatus');
+            console.log(a + b + c);//you can capture values from return SURL
+            //or
+            //incase values[0] contains result string
+            // console.log(getValue(values, 'mihpayid'))
+        });
+  
+ // iabRef.close();
+  }
+}
+
+//get values from inner HTML page i.e success page or failure page values
+function getValue(source, key) {
+    var pattern = key + '=(\\w+)(&amp;)?';
+    var expr = new RegExp(pattern);
+    var result = source.match(expr);
+    return result[1];
+}
+
+
 //load error event
 function iabLoadError(event) {
     alert(event.type + ' - ' + event.message);
